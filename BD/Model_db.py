@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Float
 from BD.alchemy import Base
 
 
@@ -155,5 +155,31 @@ class Users(Base):
         self.user = user
         self.password = password
         self.email = email
+
+class Statistics(Base):
+    __tablename__ = "statistics"
+
+    id = Column(Integer, primary_key=True)
+    yellow_card = Column(Integer)
+    red_card = Column(Integer)
+    shot = Column(Integer)
+    shot_on_target = Column(Integer)
+    passing = Column(Integer)
+    passing_completed = Column(Integer)
+    fouls = Column(Integer)
+    game = Column(Integer)
+    country = Column(String)
+    date_add = Column(DateTime, default=datetime.utcnow)
+
+    def __init__(self, yellow_card, red_card, shot, shot_on_target, passing, passing_completed, fouls, game, country):
+        self.yellow_card = yellow_card
+        self.red_card = red_card
+        self.shot = shot
+        self.shot_on_target = shot_on_target
+        self.passing = passing
+        self.passing_completed = passing_completed
+        self.fouls = fouls
+        self.game = game
+        self.country = country
 
 

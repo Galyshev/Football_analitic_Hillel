@@ -151,8 +151,7 @@ def france_parser():
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
-        # print(won,drawn,lost,  goals_for, goals_against)
-        # print('///////////////////////////////////////')
+
 
 def italy_parser():
     site = 'https://www.legaseriea.it/en/serie-a/classifica'
@@ -197,11 +196,93 @@ def italy_parser():
         db_session.commit()
         db_session.close()
 
+def statistics_parser():
+    site_list = ['https://fbref.com/en/comps/13/Ligue-1-Stats', 'https://fbref.com/en/comps/9/Premier-League-Stats',
+                 'https://fbref.com/en/comps/12/La-Liga-Stats', 'https://fbref.com/en/comps/11/Serie-A-Stats',
+                 'https://fbref.com/en/comps/20/Bundesliga-Stats']
+    country_dic = {1: 'France', 2: 'England', 3: 'Spain', 4: 'Italy', 5: 'Germany'}
+    flag = 1
 
+    # так как данные тянутся с таблицы всегда актуальные, нет смысла обновлять базу, проще удалить данные и записать по новой
+    # так точно не будет дублирований
+    db_session.execute(sa_text('TRUNCATE TABLE statistics').execution_options(autocommit=True))
+
+    for site in site_list:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        url = site
+        r = requests.get(url, headers=headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        # удары
+        content = soup.findAll("table", {"id": "stats_squads_shooting_for"})
+        shots=[]
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "shots"})
+            for y in cont:
+                shots.append(int(y.text))
+        shots_on_target = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "shots_on_target"})
+            for y in cont:
+                shots_on_target.append(int(y.text))
+        shots_on_target = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "shots_on_target"})
+            for y in cont:
+                shots_on_target.append(int(y.text))
+
+        # пасы
+        content = soup.findAll("table", {"id": "stats_squads_passing_for"})
+        passing = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "passes"})
+            for y in cont:
+                passing.append(int(y.text))
+        passing_completed = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "passes_completed"})
+            for y in cont:
+                passing_completed.append(int(y.text))
+
+        # фолы
+        content = soup.findAll("table", {"id": "stats_squads_misc_for"})
+        fouls = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "fouls"})
+            for y in cont:
+                fouls.append(int(y.text))
+        yellow_card = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "cards_yellow"})
+            for y in cont:
+                yellow_card.append(int(y.text))
+        red_card = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "cards_red"})
+            for y in cont:
+                red_card.append(int(y.text))
+
+        # игры
+        content = soup.findAll("table", {"id": "stats_squads_standard_for"})
+        games = []
+        for i in content:
+            cont = i.findAll("td", {"data-stat": "games"})
+            for y in cont:
+                games.append(int(y.text))
+
+        country = country_dic[flag]
+
+        insert_query = Model_db.Statistics(yellow_card=sum(yellow_card), red_card=sum(red_card), shot=sum(shots),
+                                            shot_on_target=sum(shots_on_target), passing=sum(passing), country=country,
+                                           passing_completed=sum(passing_completed), fouls=sum(fouls), game=sum(games))
+        db_session.add(insert_query)
+        db_session.commit()
+        db_session.close()
+        flag +=1
 
 # england_parser()
 # german_parser()
 # spain_parser()
-# spain_club_site_parser()
 # france_parser()
 # italy_parser()
+# statistics_parser()
