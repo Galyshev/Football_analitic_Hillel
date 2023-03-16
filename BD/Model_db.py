@@ -9,7 +9,6 @@ class England(Base):
     id = Column(Integer, primary_key=True)
     position = Column(Integer)
     club_name = Column(String)
-    club_stat_url = Column(String)
     game = Column(Integer)
     won = Column(Integer)
     drawn = Column(Integer)
@@ -19,10 +18,9 @@ class England(Base):
     points = Column(Integer)
     date_add = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, position, club_name, club_stat_url, game, won, drawn, lost, goals_for, goals_against, points):
+    def __init__(self, position, club_name, game, won, drawn, lost, goals_for, goals_against, points):
         self.position = position
         self.club_name = club_name
-        self.club_stat_url = club_stat_url
         self.game = game
         self.won = won
         self.drawn = drawn
@@ -31,13 +29,13 @@ class England(Base):
         self.goals_against = goals_against
         self.points = points
 
+
 class Germany(Base):
     __tablename__ = "germany_table"
 
     id = Column(Integer, primary_key=True)
     position = Column(Integer)
     club_name = Column(String)
-    club_stat_url = Column(String)
     game = Column(Integer)
     won = Column(Integer)
     drawn = Column(Integer)
@@ -47,10 +45,9 @@ class Germany(Base):
     points = Column(Integer)
     date_add = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, position, club_name, club_stat_url, game, won, drawn, lost, goals_for, goals_against, points):
+    def __init__(self, position, club_name, game, won, drawn, lost, goals_for, goals_against, points):
         self.position = position
         self.club_name = club_name
-        self.club_stat_url = club_stat_url
         self.game = game
         self.won = won
         self.drawn = drawn
@@ -65,7 +62,6 @@ class France(Base):
     id = Column(Integer, primary_key=True)
     position = Column(Integer)
     club_name = Column(String)
-    club_stat_url = Column(String)
     game = Column(Integer)
     won = Column(Integer)
     drawn = Column(Integer)
@@ -75,10 +71,9 @@ class France(Base):
     points = Column(Integer)
     date_add = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, position, club_name, club_stat_url, game, won, drawn, lost, goals_for, goals_against, points):
+    def __init__(self, position, club_name, game, won, drawn, lost, goals_for, goals_against, points):
         self.position = position
         self.club_name = club_name
-        self.club_stat_url = club_stat_url
         self.game = game
         self.won = won
         self.drawn = drawn
@@ -86,6 +81,7 @@ class France(Base):
         self.goals_for = goals_for
         self.goals_against = goals_against
         self.points = points
+
 
 class Spain(Base):
     __tablename__ = "spain_table"
@@ -93,7 +89,6 @@ class Spain(Base):
     id = Column(Integer, primary_key=True)
     position = Column(Integer)
     club_name = Column(String)
-    club_stat_url = Column(String)
     game = Column(Integer)
     won = Column(Integer)
     drawn = Column(Integer)
@@ -103,10 +98,9 @@ class Spain(Base):
     points = Column(Integer)
     date_add = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, position, club_name, club_stat_url, game, won, drawn, lost, goals_for, goals_against, points):
+    def __init__(self, position, club_name, game, won, drawn, lost, goals_for, goals_against, points):
         self.position = position
         self.club_name = club_name
-        self.club_stat_url = club_stat_url
         self.game = game
         self.won = won
         self.drawn = drawn
@@ -114,6 +108,7 @@ class Spain(Base):
         self.goals_for = goals_for
         self.goals_against = goals_against
         self.points = points
+
 
 class Italy(Base):
     __tablename__ = "italy_table"
@@ -121,7 +116,6 @@ class Italy(Base):
     id = Column(Integer, primary_key=True)
     position = Column(Integer)
     club_name = Column(String)
-    club_stat_url = Column(String)
     game = Column(Integer)
     won = Column(Integer)
     drawn = Column(Integer)
@@ -131,10 +125,9 @@ class Italy(Base):
     points = Column(Integer)
     date_add = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, position, club_name, club_stat_url, game, won, drawn, lost, goals_for, goals_against, points):
+    def __init__(self, position, club_name, game, won, drawn, lost, goals_for, goals_against, points):
         self.position = position
         self.club_name = club_name
-        self.club_stat_url = club_stat_url
         self.game = game
         self.won = won
         self.drawn = drawn
@@ -142,6 +135,7 @@ class Italy(Base):
         self.goals_for = goals_for
         self.goals_against = goals_against
         self.points = points
+
 
 class Users(Base):
     __tablename__ = "Users"

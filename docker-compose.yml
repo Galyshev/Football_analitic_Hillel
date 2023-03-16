@@ -2,12 +2,12 @@
 version: "3.9"
 services:
   web:
-    build: ""
+    build: .
     ports:
       - "8000:5000"
     depends_on:
       - rabbit_container
-    command: python3 main
+    command: python3 main.py
     environment:
       - RABBIT_HOST = rabbit_container
       - DB_HOST=postgres_container
@@ -22,7 +22,7 @@ services:
     hostname: rabbit_container
 
   celery_worker_container:
-    build: ""
+    build: .
     command: celery -A celery_work worker --loglevel=INFO --pool=solo
     depends_on:
       - rabbit_container

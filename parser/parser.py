@@ -22,8 +22,6 @@ def england_parser():
     for i in club_content:
         position = i.find("span", {"class": "value"}).text
         club_name = i.find("span", {"class": "long"}).text
-        part_club_site = i.find("a")['href']
-        club_url = 'https://www.premierleague.com' + part_club_site
         game = i.findAll("td")[3].text
         won = i.findAll("td")[4].text
         drawn = i.findAll("td")[5].text
@@ -32,7 +30,7 @@ def england_parser():
         goals_against = i.findAll("td", {"class": "hideSmall"})[1].text
         points = i.find("td", {"class": "points"}).text
 
-        insert_query = Model_db.England(position=position, club_name=club_name, club_stat_url=club_url,
+        insert_query = Model_db.England(position=position, club_name=club_name,
                                          game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
                                         goals_against=goals_against, points=points)
         db_session.add(insert_query)
@@ -62,29 +60,13 @@ def german_parser():
         goals_for = str(goals).split(':')[0]
         goals_against = str(goals).split(':')[-1]
         points = i.find("td", {"class": "pts"}).text
-        tmp_site = i.find("a", {"class": "logolink"})['href']
-        club_site = 'https://www.bundesliga.com' + tmp_site
 
-        insert_query = Model_db.Germany(position=position, club_name=club_name, club_stat_url=club_site,
+        insert_query = Model_db.Germany(position=position, club_name=club_name,
                                         game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
                                         goals_against=goals_against, points=points)
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
-
-def spain_club_site_parser():
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    url = 'https://www.laliga.com/en-GB/laliga-santander/clubs'
-    r = requests.get(url, headers=headers)
-    soup = BeautifulSoup(r.text, 'html.parser')
-    club_site_content = soup.findAll("div", {"class": "styled__ItemContainer-fyva03-1"})
-    dic = {}
-    for i in club_site_content:
-        link = i.find("a", {"class": "link"})['href']
-        site_stat = 'https://www.laliga.com' + link
-        name_club = i.find("h2").text
-        dic[name_club] = site_stat
-    return dic
 
 def spain_parser():
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -108,17 +90,14 @@ def spain_parser():
         goals_for = i.findAll("div", {"class": "styled__Td-e89col-10 gETuZs"})[5].text
         goals_against = i.findAll("div", {"class": "styled__Td-e89col-10 gETuZs"})[6].text
         points = i.findAll("div", {"class": "styled__Td-e89col-10 gETuZs"})[0].text
-        dic_site = spain_club_site_parser()
-        club_site = dic_site[club_name]
 
-        insert_query = Model_db.Spain(position=position, club_name=club_name, club_stat_url=club_site,
+        insert_query = Model_db.Spain(position=position, club_name=club_name,
                                         game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
                                         goals_against=goals_against, points=points)
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
-        print(club_site)
-        print('///////////////////////////////////////')
+
 
 def france_parser():
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -142,10 +121,8 @@ def france_parser():
         goals_for = i.findAll("div", {"class": "GeneralStats-item"})[7].text
         goals_against = i.findAll("div", {"class": "GeneralStats-item"})[8].text
         points = i.find("div", {"class": "GeneralStats-item GeneralStats-item--points"}).text
-        part_club_site = i.find("a", {"class": "GeneralStats-link"})['href']
-        club_site = 'https://www.ligue1.com' + part_club_site
 
-        insert_query = Model_db.France(position=position, club_name=club_name, club_stat_url=club_site,
+        insert_query = Model_db.France(position=position, club_name=club_name,
                                         game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
                                         goals_against=goals_against, points=points)
         db_session.add(insert_query)
@@ -157,7 +134,7 @@ def italy_parser():
     site = 'https://www.legaseriea.it/en/serie-a/classifica'
     chrome_options = Options()
     chrome_options.add_argument('--headless')
-    executable_path = '.\\chromedriver.exe'
+    executable_path = 'chromedriver.exe'
     driver = webdriver.Chrome(executable_path=executable_path, options=chrome_options)
     driver.get(site)
 
@@ -181,15 +158,8 @@ def italy_parser():
         lost = content[7].text
         goals_for = content[8].text
         goals_against = content[9].text
-        content_site = i.findAll("a")
-        for y in content_site:
-            try:
-                part_club_site = y['href']
-                club_site = 'https://www.legaseriea.it' + part_club_site
-            except KeyError:
-                pass
 
-        insert_query = Model_db.Italy(position=position, club_name=club_name, club_stat_url=club_site,
+        insert_query = Model_db.Italy(position=position, club_name=club_name,
                                         game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
                                         goals_against=goals_against, points=points)
         db_session.add(insert_query)
