@@ -2,7 +2,7 @@
 # TODO при создании контейнера файл выложить в корневой каталог, туда же выложить requirements.txt
 
 FROM python:3.9-alpine
-WORKDIR /football_analitics
+WORKDIR /football_analytics
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt

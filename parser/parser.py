@@ -252,7 +252,7 @@ def statistics_parser():
 
 # england_parser()
 # german_parser()
-# spain_parser()
+spain_parser()
 # france_parser()
 # italy_parser()
 # statistics_parser()

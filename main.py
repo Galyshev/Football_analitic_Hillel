@@ -1,6 +1,6 @@
 import os
 from BD.alchemy import db_session
-from flask import Flask, request, render_template, redirect, flash
+from flask import Flask, request, render_template, redirect
 from BD import Model_db
 from flask import session as flsk_sess
 import celery_work
@@ -61,7 +61,7 @@ def analytics():
         # Если кто то вводит эндпоинт вручную, минуя авторизацию
         if 'username' in flsk_sess:
             #oбновление данных через selery
-            celery_work.data_update()
+            celery_work.data_update()  
             return render_template('analytics.html')
         else:
             return render_template('login.html')
