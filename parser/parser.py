@@ -31,11 +31,12 @@ def england_parser():
         points = i.find("td", {"class": "points"}).text
 
         insert_query = Model_db.England(position=position, club_name=club_name,
-                                         game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
+                                        game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
                                         goals_against=goals_against, points=points)
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
+
 
 def german_parser():
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -68,6 +69,7 @@ def german_parser():
         db_session.commit()
         db_session.close()
 
+
 def spain_parser():
     headers = {'User-Agent': 'Mozilla/5.0'}
     url = 'https://www.laliga.com/en-GB/laliga-santander/standing'
@@ -92,8 +94,8 @@ def spain_parser():
         points = i.findAll("div", {"class": "styled__Td-e89col-10 gETuZs"})[0].text
 
         insert_query = Model_db.Spain(position=position, club_name=club_name,
-                                        game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
-                                        goals_against=goals_against, points=points)
+                                      game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
+                                      goals_against=goals_against, points=points)
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
@@ -123,8 +125,8 @@ def france_parser():
         points = i.find("div", {"class": "GeneralStats-item GeneralStats-item--points"}).text
 
         insert_query = Model_db.France(position=position, club_name=club_name,
-                                        game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
-                                        goals_against=goals_against, points=points)
+                                       game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
+                                       goals_against=goals_against, points=points)
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
@@ -160,11 +162,12 @@ def italy_parser():
         goals_against = content[9].text
 
         insert_query = Model_db.Italy(position=position, club_name=club_name,
-                                        game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
-                                        goals_against=goals_against, points=points)
+                                      game=game, won=won, drawn=drawn, lost=lost, goals_for=goals_for,
+                                      goals_against=goals_against, points=points)
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
+
 
 def statistics_parser():
     site_list = ['https://fbref.com/en/comps/13/Ligue-1-Stats', 'https://fbref.com/en/comps/9/Premier-League-Stats',
@@ -185,16 +188,11 @@ def statistics_parser():
 
         # удары
         content = soup.findAll("table", {"id": "stats_squads_shooting_for"})
-        shots=[]
+        shots = []
         for i in content:
             cont = i.findAll("td", {"data-stat": "shots"})
             for y in cont:
                 shots.append(int(y.text))
-        shots_on_target = []
-        for i in content:
-            cont = i.findAll("td", {"data-stat": "shots_on_target"})
-            for y in cont:
-                shots_on_target.append(int(y.text))
         shots_on_target = []
         for i in content:
             cont = i.findAll("td", {"data-stat": "shots_on_target"})
@@ -243,16 +241,178 @@ def statistics_parser():
         country = country_dic[flag]
 
         insert_query = Model_db.Statistics(yellow_card=sum(yellow_card), red_card=sum(red_card), shot=sum(shots),
-                                            shot_on_target=sum(shots_on_target), passing=sum(passing), country=country,
+                                           shot_on_target=sum(shots_on_target), passing=sum(passing), country=country,
                                            passing_completed=sum(passing_completed), fouls=sum(fouls), game=sum(games))
         db_session.add(insert_query)
         db_session.commit()
         db_session.close()
-        flag +=1
+        flag += 1
+
+
+def club_statistics_parser():
+    site_list = ['https://fbref.com/en/comps/13/Ligue-1-Stats', 'https://fbref.com/en/comps/9/Premier-League-Stats',
+                 'https://fbref.com/en/comps/12/La-Liga-Stats', 'https://fbref.com/en/comps/11/Serie-A-Stats',
+                 'https://fbref.com/en/comps/20/Bundesliga-Stats']
+    id_tablelist = ["results2022-2023131_overall", "results2022-202391_overall",
+                    "results2022-2023121_overall", "results2022-2023111_overall",
+                    "results2022-2023201_overall"]
+    country = ['France', 'England', 'Spain', 'Italy', 'Germany']
+    print(country)
+    flag = 0
+
+    db_session.execute(sa_text('TRUNCATE TABLE statistics_club').execution_options(autocommit=True))
+
+    for site in site_list:
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        url = site
+        r = requests.get(url, headers=headers)
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        clubs = []
+        id_table = id_tablelist[flag]
+        content = soup.findAll("table", {"id": id_table})
+        for i in content:
+            club = i.findAll("td", {"data-stat": "team"})
+            for y in club:
+                clubs.append(y.text)
+        FIRST_CLUB_NAME = str(clubs[0]).strip()
+        rez = {}
+
+        # удары
+        value1 = []
+        value2 = []
+        name_club = []
+        content = soup.findAll("table", {"id": "stats_squads_shooting_for"})
+        for i in content:
+            club = i.findAll("th", {"data-stat": "team"})[1:]
+            for y in club:
+                name_club.append(y.text)
+            cont = i.findAll("td", {"data-stat": "shots_on_target_pct"})
+            for y in cont:
+                value1.append(y.text)
+            cont = i.findAll("td", {"data-stat": "average_shot_distance"})
+            for y in cont:
+                value2.append(y.text)
+
+        for i in range(len(name_club)):
+            name = name_club[i]
+            if FIRST_CLUB_NAME == name:
+                rez['shots_on_target_pct'] = float(value1[i])
+                rez['average_shot_distance'] = round((float(value2[i]) * 0.9144), 2)
+
+        # пасы
+        tmp1 = []
+        tmp2 = []
+        value1 = []
+        value2 = []
+        name_club = []
+        content = soup.findAll("table", {"id": "stats_squads_passing_for"})
+        for i in content:
+            club = i.findAll("th", {"data-stat": "team"})[1:]
+            for y in club:
+                name_club.append(y.text)
+            cont = i.findAll("td", {"data-stat": "passes_pct"})
+            for y in cont:
+                value1.append(y.text)
+            cont = i.findAll("td", {"data-stat": "passes_pct_short"})
+            for y in cont:
+                value2.append(y.text)
+            cont = i.findAll("td", {"data-stat": "passes_pct_medium"})
+            for y in cont:
+                tmp1.append(y.text)
+            cont = i.findAll("td", {"data-stat": "passes_pct_long"})
+            for y in cont:
+                tmp2.append(y.text)
+        for i in range(len(name_club)):
+            name = name_club[i]
+            if FIRST_CLUB_NAME == name:
+                rez['passes_pct'] = float(value1[i])
+                rez['passes_pct_short'] = float(value2[i])
+                rez['passes_pct_medium'] = float(tmp1[i])
+                rez['passes_pct_long'] = float(tmp2[i])
+
+        # фолы
+        value1 = []
+        value2 = []
+        name_club = []
+        content = soup.findAll("table", {"id": "stats_squads_misc_for"})
+        for i in content:
+            club = i.findAll("th", {"data-stat": "team"})[1:]
+            for y in club:
+                name_club.append(y.text)
+            cont = i.findAll("td", {"data-stat": "fouls"})
+            for y in cont:
+                value1.append(y.text)
+            cont = i.findAll("td", {"data-stat": "cards_yellow"})
+            for y in cont:
+                value2.append(y.text)
+
+        for i in range(len(name_club)):
+            name = name_club[i]
+            if FIRST_CLUB_NAME == name:
+                rez['fouls'] = int(value1[i])
+                rez['cards_yellow'] = int(value2[i])
+
+        # гол на удары в створ
+        value1 = []
+        name_club = []
+        content = soup.findAll("table", {"id": "stats_squads_shooting_for"})
+        for i in content:
+            club = i.findAll("th", {"data-stat": "team"})[1:]
+            for y in club:
+                name_club.append(y.text)
+            cont = i.findAll("td", {"data-stat": "goals_per_shot_on_target"})
+            for y in cont:
+                value1.append(y.text)
+
+        for i in range(len(name_club)):
+            name = name_club[i]
+            if FIRST_CLUB_NAME == name:
+                rez['goals_per_shot_on_target'] = float(value1[i])
+
+        # атакующие действия
+        value1 = []
+        name_club = []
+        content = soup.findAll("table", {"id": "stats_squads_gca_for"})
+        for i in content:
+            club = i.findAll("th", {"data-stat": "team"})[1:]
+            for y in club:
+                name_club.append(y.text)
+            cont = i.findAll("td", {"data-stat": "sca_per90"})
+            for y in cont:
+                value1.append(y.text)
+
+        for i in range(len(name_club)):
+            name = name_club[i]
+            if FIRST_CLUB_NAME == name:
+                rez['sca_per90'] = float(value1[i])
+
+        countr = country[flag]
+
+
+
+        insert_query = Model_db.Club_Statistics(shots_on_target_pct=rez['shots_on_target_pct'],
+                                                average_shot_distance=rez['average_shot_distance'],
+                                                passes_pct=rez['passes_pct'],
+                                                passes_pct_short=rez['passes_pct_short'],
+                                                passes_pct_medium=rez['passes_pct_medium'],
+                                                passes_pct_long=rez['passes_pct_long'], fouls=rez['fouls'],
+                                                cards_yellow=rez['cards_yellow'],
+                                                country=countr,
+                                                goals_per_shot_on_target=rez['goals_per_shot_on_target'],
+                                                sca_per90=rez['sca_per90'])
+        db_session.add(insert_query)
+        db_session.commit()
+        db_session.close()
+
+        flag += 1
+
 
 # england_parser()
 # german_parser()
-spain_parser()
+# spain_parser()
 # france_parser()
 # italy_parser()
 # statistics_parser()
+# first_club_name()
+# club_statistics_parser()

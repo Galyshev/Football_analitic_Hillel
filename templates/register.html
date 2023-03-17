@@ -1,32 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
- <form action="/Register" method="post">
-  <div class="container">
-    <h1>Регистрация</h1>
-    <p>Пожалуйста, заполните форму для создания аккаунта</p>
-    <hr>
+{% extends 'base.html' %}
+{% block main %}
+<style>
+    html{
+        height: 90%;
+    }
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40%;
+    }
+    form{
+      width: 60vw;
+      height: 30vh;
+      background: #E0F1D6;
+      text-align: center;
+      padding: 20px;
+    }
+     input {
+    text-align: center;
+    }
 
-    <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="может быть пустым" name="email" id="email">
 
-    <label for="login"><b>Логин для входа</b></label>
-    <input type="text" placeholder="Введите логин" name="login" id="login" required>
+</style>
+<form action="/Register" method="post">
+    <div class="container">
+        <h1>Реєстрація</h1>
+        <p>Будь ласка, заповніть форму для створення облікового запису</p>
+        <hr>
 
-    <label for="psw"><b>Пароль</b></label>
-    <input type="password" placeholder="Введитн пароль" name="psw" id="psw" required>
-    <hr>
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="може бути порожнім" name="email" id="email">
 
-    <button type="submit" class="registerbtn">Зарегистрироваться</button>
-  </div>
+        <label for="login"><b>Логін для входу</b></label>
+        <input type="text" placeholder="Введіть логін" name="login" id="login" required>
 
-  <div class="container signin">
-    <p>Уже зарегистрированы? <a href="/Login">Авторизация</a>.</p>
-  </div>
+        <label for="psw"><b>Пароль</b></label>
+        <input type="password" placeholder="Введіть пароль" name="psw" id="psw" required>
+        <hr>
+
+        <button type="submit" class="registerbtn">Зареєструватись</button>
+    </div>
+
+    <div class="container signin">
+        <p>Вже зареєстровані? <a href="/Login">Авторизація</a>.</p>
+    </div>
 </form>
-</body>
-</html>
+{% endblock %}

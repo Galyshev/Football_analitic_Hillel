@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from BD.alchemy import db_session
-from BD import Model_db
+from BD.Model_db import England, Germany, France, Spain, Italy
 from sqlalchemy.sql import text as sa_text
 
 
@@ -12,18 +12,31 @@ def query_DB(query):
     rez = query.fetchone()
     return rez
 
-
 def create_graph(dic, colnames, name_file):
     frame = pd.DataFrame.from_dict(dic, orient='index', columns=colnames)
     print(frame)
 
-    swarm_plot = sns.barplot(data=frame, x=colnames[0], y=colnames[1])  # ,estimator=np.sum
+    file = "../static/" + name_file + ".png"
+    plt.figure()
+    swarm_plot = sns.barplot(data=frame, x=colnames[0], y=colnames[1])
     swarm_plot.bar_label(swarm_plot.containers[0])
-    fig = swarm_plot.get_figure()
-    plt.show()
-    file = "./pic/" + name_file + ".png"
-    fig.savefig(file, dpi=600)
+    # plt.show()
+    plt.savefig(file, dpi=600)
 
+def ranking_club():
+    best_club_e = db_session.query(England.club_name).filter(
+        England.position == 1).all()[0][0]
+    best_club_s = db_session.query(Spain.club_name).filter(
+        Spain.position == 1).all()[0][0]
+    best_club_i = db_session.query(Italy.club_name).filter(
+        Italy.position == 1).all()[0][0]
+    best_club_g = db_session.query(Germany.club_name).filter(
+        Germany.position == 1).all()[0][0]
+    best_club_f = db_session.query(France.club_name).filter(
+        France.position == 1).all()[0][0]
+    rezult_dic = {'best_club_e': best_club_e, 'best_club_s': best_club_s, 'best_club_i': best_club_i,
+                  'best_club_g': best_club_g, 'best_club_f': best_club_f}
+    return rezult_dic
 
 def analytics_content_country():
     # Забиваемые голы, в среднем за игру (атака чемпионата)
@@ -41,20 +54,6 @@ def analytics_content_country():
 
     create_graph(goal_for_dic, ['страна', 'голы за игру'], 'goal')
 
-    #  Самые миролюбивые (больше всех ничьих)
-    drawn_e = round(query_DB('select avg(drawn)from england_table;')[0], 2)
-    drawn_s = round(query_DB('select avg(drawn) from spain_table;')[0], 2)
-    drawn_i = round(query_DB('select avg(drawn) from italy_table;')[0], 2)
-    drawn_g = round(query_DB('select avg(drawn) from germany_table;')[0], 2)
-    drawn_f = round(query_DB('select avg(drawn) from france_table;')[0], 2)
-
-    drawn_dic = {'1': ['France', drawn_f],
-                 '2': ['England', drawn_e],
-                 '3': ['Spain', drawn_s],
-                 '4': ['Italy', drawn_i],
-                 '5': ['Germany', drawn_g]}
-
-    create_graph(drawn_dic, ['страна', 'игры в ничью'], 'drawn')
 
     #  Самые точные в передачах
     passes_e = round(
@@ -169,5 +168,60 @@ def analytics_content_country():
     create_graph(shot_per_goal_dic, ['страна', 'ударов до гола'], 'shot_per_goal')
 
 
+def analytics_content_club():
+    # Клубы на 1 месте забивают за игру
+    goal_club_e = db_session.query(England.club_name, England.goals_for, England.game).filter(
+        England.position == 1).all()
+    goal_club_s = db_session.query(Spain.club_name, Spain.goals_for, Spain.game).filter(Spain.position == 1).all()
+    goal_club_i = db_session.query(Italy.club_name, Italy.goals_for, Italy.game).filter(Italy.position == 1).all()
+    goal_club_g = db_session.query(Germany.club_name, Germany.goals_for, Germany.game).filter(
+        Germany.position == 1).all()
+    goal_club_f = db_session.query(France.club_name, France.goals_for, France.game).filter(France.position == 1).all()
+
+    goal_club_e_dic = {'1': [goal_club_f[0][0], round(goal_club_f[0][1] / goal_club_f[0][2], 2)],
+                       '2': [goal_club_e[0][0], round(goal_club_e[0][1] / goal_club_e[0][2], 2)],
+                       '3': [goal_club_s[0][0], round(goal_club_s[0][1] / goal_club_s[0][2], 2)],
+                       '4': [goal_club_i[0][0], round(goal_club_i[0][1] / goal_club_i[0][2], 2)],
+                       '5': [goal_club_g[0][0], round(goal_club_g[0][1] / goal_club_g[0][2], 2)]}
+
+    create_graph(goal_club_e_dic, ['клуб', 'гол за игру'], 'club_goal_for')
+
+    # Клубы на 1 месте пропускают за игру
+    goals_against_club_e = db_session.query(England.club_name, England.goals_against, England.game).filter(
+        England.position == 1).all()
+    goals_against_club_s = db_session.query(Spain.club_name, Spain.goals_against, Spain.game).filter(
+        Spain.position == 1).all()
+    goals_against_club_i = db_session.query(Italy.club_name, Italy.goals_against, Italy.game).filter(
+        Italy.position == 1).all()
+    goals_against_club_g = db_session.query(Germany.club_name, Germany.goals_against, Germany.game).filter(
+        Germany.position == 1).all()
+    goals_against_club_f = db_session.query(France.club_name, France.goals_against, France.game).filter(
+        France.position == 1).all()
+
+    goals_against_club_e_dic = {
+        '1': [goals_against_club_f[0][0], round(goals_against_club_f[0][1] / goals_against_club_f[0][2], 2)],
+        '2': [goals_against_club_e[0][0], round(goals_against_club_e[0][1] / goals_against_club_e[0][2], 2)],
+        '3': [goals_against_club_s[0][0], round(goals_against_club_s[0][1] / goals_against_club_s[0][2], 2)],
+        '4': [goals_against_club_i[0][0], round(goals_against_club_i[0][1] / goals_against_club_i[0][2], 2)],
+        '5': [goals_against_club_g[0][0], round(goals_against_club_g[0][1] / goals_against_club_g[0][2], 2)]}
+
+    create_graph(goals_against_club_e_dic, ['клуб', 'гол за игру'], 'club_against_for')
+
+def ranking_club():
+    best_club_e = db_session.query(England.club_name).filter(
+        England.position == 1).all()[0][0]
+    best_club_s = db_session.query(Spain.club_name).filter(
+        Spain.position == 1).all()[0][0]
+    best_club_i = db_session.query(Italy.club_name).filter(
+        Italy.position == 1).all()[0][0]
+    best_club_g = db_session.query(Germany.club_name).filter(
+        Germany.position == 1).all()[0][0]
+    best_club_f = db_session.query(France.club_name).filter(
+        France.position == 1).all()[0][0]
+    rezult_dic = {'best_club_e': best_club_e, 'best_club_s': best_club_s, 'best_club_i': best_club_i,
+                  'best_club_g': best_club_g, 'best_club_f': best_club_f}
+    return rezult_dic
 if __name__ == '__main__':
     analytics_content_country()
+    # analytics_content_club()
+    # ranking_club()

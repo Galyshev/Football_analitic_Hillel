@@ -1,35 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block main %}
+<style>
+    html{
+        height: 90%;
+    }
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70%;
+    }
+    .container{
+      width: 30vw;
+      height: 35vh;
+      background: #E0F1D6;
+      text-align: center;
+      padding: 15px;
+    }
+    th {
+        padding: 10px;
+    }
+    .exept {
+    width: 30vw;
+      height: 20vh;
+      background: #E0F1D6;
+      text-align: center;
+      height: 20%;
+      padding: 15px;
 
- <form action="/Login" method="post">
-  <div class="container">
-    <h1>Авторизация</h1>
+    }
+    input {
+    text-align: center;
+    }
 
-    <p><label for="login"><b>Логин для входа</b></label></p>
-    <input type="text" placeholder="Введите логин" name="login" id="login" required>
 
-    <p><label for="psw"><b>Пароль</b></label></p>
-    <input type="password" placeholder="Введитн пароль" name="psw" id="psw" required>
+</style>
+<form action="/Login" method="post">
+    <div class="container">
+        <h1>Авторизація</h1>
 
-   <p><button type="submit" class="registerbtn">Авторизироваться</button></p>
-  </div>
+        <p><label for="login"><b>Логін для входу</b></label></p>
+        <input type="text" placeholder="Введіть логін" name="login" id="login" required>
+
+        <p><label for="psw"><b>Пароль</b></label></p>
+        <input type="password" placeholder="Введіть пароль" name="psw" id="psw" required>
+
+        <p>
+            <button type="submit" class="registerbtn">Авторизуватися</button>
+        </p>
+    </div>
+    <div class="exept">
+        <p>{% if no_login %}
+        <h3>такий логін не знайдено, спробуйте ще раз або зареєструйтесь</h3>
+        <p><a href="/Register">Реєстрація</a></p>
+
+        {% endif %}</p>
+
+        <p>{% if no_password %}
+        <h3>неправильно введено пароль</h3>
+        {% endif %}</p>
+    </div>
 </form>
 
-<p>{% if no_login %}
-    <h3>такой логин не найден, попробуйте еще раз или зарегистрируйтесь</h3>
-      <p><a href="/Register">Регистрация</a></p>
-
-    {% endif %}</p>
-
-<p>{% if no_password %}
-    <h3>неверно введен пароль</h3>
-    {% endif %}</p>
-
-
-</body>
-</html>
+{% endblock %}

@@ -176,4 +176,33 @@ class Statistics(Base):
         self.game = game
         self.country = country
 
+class Club_Statistics(Base):
+    __tablename__ = "statistics_club"
 
+    id = Column(Integer, primary_key=True)
+    shots_on_target_pct = Column(Float)
+    average_shot_distance = Column(Float)
+    passes_pct = Column(Float)
+    passes_pct_short = Column(Float)
+    passes_pct_medium = Column(Float)
+    passes_pct_long = Column(Float)
+    fouls = Column(Integer)
+    cards_yellow = Column(Integer)
+    goals_per_shot_on_target = Column(Float)
+    sca_per90 = Column(Float)
+    country = Column(String)
+    date_add = Column(DateTime, default=datetime.utcnow)
+
+    def __init__(self, shots_on_target_pct, average_shot_distance, passes_pct, passes_pct_short, passes_pct_medium,
+                 passes_pct_long, fouls, cards_yellow, country, goals_per_shot_on_target, sca_per90):
+        self.shots_on_target_pct = shots_on_target_pct
+        self.average_shot_distance = average_shot_distance
+        self.passes_pct = passes_pct
+        self.passes_pct_short = passes_pct_short
+        self.passes_pct_medium = passes_pct_medium
+        self.passes_pct_long = passes_pct_long
+        self.fouls = fouls
+        self.cards_yellow = cards_yellow
+        self.country = country
+        self.goals_per_shot_on_target = goals_per_shot_on_target
+        self.sca_per90 = sca_per90
