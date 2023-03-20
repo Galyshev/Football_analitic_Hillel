@@ -1,36 +1,17 @@
 # TODO при создании контейнера файл выложить в корневой каталог
-version: "3.9"
+version: "3.11"
 services:
   web:
     build: .
     ports:
       - "8000:5000"
-    depends_on:
-      - rabbit_container
     command: python3 main.py
     environment:
-      - RABBIT_HOST = rabbit_container
+
       - DB_HOST=postgres_container
       - DB_USER=postgres
       - DB_PASSWORD=postgres
 
-  rabbit_container:
-    image: "rabbitmq:3.8.9-management"
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    hostname: rabbit_container
-
-  celery_worker_container:
-    build: .
-    command: celery -A celery_work worker --loglevel=INFO --pool=solo
-    depends_on:
-      - rabbit_container
-    environment:
-      - RABBIT_HOST=rabbit_container
-      - DB_HOST=postgres_container
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
 
   db:
     image: postgres:14.1-alpine

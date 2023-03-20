@@ -3,8 +3,9 @@ from BD.alchemy import db_session
 from flask import Flask, request, render_template, redirect
 from BD import Model_db
 from flask import session as flsk_sess
-import celery_work
 from analytics import create_analytics_content
+import data_update
+import asyncio
 
 flask_app = Flask(__name__)
 flask_app.secret_key = os.environ.get("SECRET_KEY")
@@ -62,9 +63,10 @@ def logout():
         return "Вы не авторизированы"
 @flask_app.route("/Update", methods=['GET'])
 def update():
-    # oбновление данных через selery
-    # celery_work.analytics_update() #TODO обновление
-    # celery_work.data_update()     #TODO обновление
+    # oбновление данных
+    asyncio.run(data_update.data_update())
+    asyncio.run(data_update.analytics_update()) #TODO обновление
+
     return redirect("/Analytics")
 @flask_app.route("/Analytics", methods=['GET', 'POST'])
 def analytics():

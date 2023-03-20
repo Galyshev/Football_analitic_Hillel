@@ -1,6 +1,5 @@
 import seaborn as sns
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from BD.alchemy import db_session
 from BD.Model_db import England, Germany, France, Spain, Italy, Club_Statistics
