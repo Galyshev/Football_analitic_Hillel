@@ -14,7 +14,7 @@ def query_DB(query):
 
 def create_graph(dic, colnames, name_file):
     frame = pd.DataFrame.from_dict(dic, orient='index', columns=colnames)
-    print(frame)
+    # print(frame)
 
     file = "./static/" + name_file + ".png"
     plt.figure()

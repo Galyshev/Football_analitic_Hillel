@@ -1,3 +1,4 @@
+import chromedriver_autoinstaller
 from sqlalchemy.sql import text as sa_text
 from BD.alchemy import db_session
 import requests
@@ -136,8 +137,10 @@ def italy_parser():
     site = 'https://www.legaseriea.it/en/serie-a/classifica'
     chrome_options = Options()
     chrome_options.add_argument('--headless')
-    executable_path = 'chromedriver.exe'
-    driver = webdriver.Chrome(executable_path=executable_path, options=chrome_options)
+    # executable_path = 'chromedriver.exe'
+    chromedriver_autoinstaller.install()
+    driver = webdriver.Chrome(options=chrome_options)
+    # driver = webdriver.Chrome(executable_path = executable_path, options=chrome_options)
     driver.get(site)
 
     pageSource = driver.page_source

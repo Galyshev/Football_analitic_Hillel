@@ -1,5 +1,8 @@
 # TODO при создании контейнера файл выложить в корневой каталог
 version: "3.11"
+secrets:
+  FLASK_SECRET_KEY:
+    external: true
 services:
   web:
     build: .
@@ -7,10 +10,10 @@ services:
       - "8000:5000"
     command: python3 main.py
     environment:
-
       - DB_HOST=postgres_container
       - DB_USER=postgres
       - DB_PASSWORD=postgres
+      - FLSK_SECRET_KEY='fghgfdssdfdsgdfhgf'
 
 
   db:

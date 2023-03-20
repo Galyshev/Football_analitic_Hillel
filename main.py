@@ -8,7 +8,7 @@ import data_update
 import asyncio
 
 flask_app = Flask(__name__)
-flask_app.secret_key = os.environ.get("SECRET_KEY")
+flask_app.secret_key = os.environ.get("SECRET_KEY", 'FLSK_SECRET_KEY')
 
 @flask_app.route("/", methods=['GET'])
 def index():
@@ -65,8 +65,7 @@ def logout():
 def update():
     # oбновление данных
     asyncio.run(data_update.data_update())
-    asyncio.run(data_update.analytics_update()) #TODO обновление
-
+    asyncio.run(data_update.analytics_update())
     return redirect("/Analytics")
 @flask_app.route("/Analytics", methods=['GET', 'POST'])
 def analytics():
@@ -81,7 +80,7 @@ def analytics():
             return render_template('login.html', title=title)
     else:
         if 'username' in flsk_sess:
-            return "Включился метод POST"
+            return "Включился метод POST ?"
 
 if __name__ == '__main__':
     flask_app.run(debug=True, host="0.0.0.0", port=5000)
