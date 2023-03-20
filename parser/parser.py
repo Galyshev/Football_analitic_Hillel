@@ -257,7 +257,6 @@ def club_statistics_parser():
                     "results2022-2023121_overall", "results2022-2023111_overall",
                     "results2022-2023201_overall"]
     country = ['France', 'England', 'Spain', 'Italy', 'Germany']
-    print(country)
     flag = 0
 
     db_session.execute(sa_text('TRUNCATE TABLE statistics_club').execution_options(autocommit=True))
@@ -389,8 +388,6 @@ def club_statistics_parser():
 
         countr = country[flag]
 
-
-
         insert_query = Model_db.Club_Statistics(shots_on_target_pct=rez['shots_on_target_pct'],
                                                 average_shot_distance=rez['average_shot_distance'],
                                                 passes_pct=rez['passes_pct'],
@@ -406,7 +403,6 @@ def club_statistics_parser():
         db_session.close()
 
         flag += 1
-
 
 # england_parser()
 # german_parser()

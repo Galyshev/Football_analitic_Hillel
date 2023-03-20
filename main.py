@@ -62,9 +62,8 @@ def logout():
         return "Вы не авторизированы"
 @flask_app.route("/Update", methods=['GET'])
 def update():
-    title = 'Update'
     # oбновление данных через selery
-    create_analytics_content.analytics_content_country()
+    # celery_work.analytics_update() #TODO обновление
     # celery_work.data_update()     #TODO обновление
     return redirect("/Analytics")
 @flask_app.route("/Analytics", methods=['GET', 'POST'])

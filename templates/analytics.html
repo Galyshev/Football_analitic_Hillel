@@ -8,9 +8,11 @@
   display: flex;
   justify-content: center;
   width: 95%;
-
   margin: 30px;
 
+}
+.down {
+    bottom: -10px;
 }
 
 .item {
@@ -63,7 +65,11 @@
 /* отобразить контент, связанный с вабранной радиокнопкой (input type="radio") */
 #tab-btn-1:checked~#content-1,
 #tab-btn-2:checked~#content-2,
-#tab-btn-3:checked~#content-3 {
+#tab-btn-3:checked~#content-3,
+#tab-btn-4:checked~#content-4,
+#tab-btn-5:checked~#content-5,
+#tab-btn-6:checked~#content-6
+{
   display: block;
 }
 
@@ -88,13 +94,14 @@
   margin-left: 0;
 }
 
+
 </style>
 <div class="flex">
     <div class="head">
         <h2>Вітаю</h2>
         <p>До вашої уваги представлена аналітика з провідних європейських чемпіонатів з футболу. До списку входять
-           чемпіонати Англії - Прем'єр-ліга, Іспанії - Ла-Ліга, Німеччини - Бундесліга, Франції - Ліга 1
-           та Італії - Серія A</p>
+            чемпіонати Англії - Прем'єр-ліга, Іспанії - Ла-Ліга, Німеччини - Бундесліга, Франції - Ліга 1
+            та Італії - Серія A</p>
         <p>А також деякі порівняння клубів, що йдуть на першому місці у своєму чемпіонаті</p>
         <p>На даний момент в Англії це: <b>{{ request_ranking_club['best_club_e']}}</b>,
             в Іспанії це: <b>{{ request_ranking_club['best_club_s']}}</b>,
@@ -104,70 +111,132 @@
     </div>
 </div>
 <div class="tabs">
-  <input type="radio" name="tab-btn" id="tab-btn-1" value="" checked>
-  <label for="tab-btn-1">Найкращі клуби</label>
-  <input type="radio" name="tab-btn" id="tab-btn-2" value="">
-  <label for="tab-btn-2">Найгірші клуби</label>
-  <input type="radio" name="tab-btn" id="tab-btn-3" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-      <input type="radio" name="tab-btn" id="tab-btn-4" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-      <input type="radio" name="tab-btn" id="tab-btn-4" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-      <input type="radio" name="tab-btn" id="tab-btn-5" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-      <input type="radio" name="tab-btn" id="tab-btn-6" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-      <input type="radio" name="tab-btn" id="tab-btn-7" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-          <input type="radio" name="tab-btn" id="tab-btn-8" value="">
-  <label for="tab-btn-3">Вкладка 3</label>
-  <div id="content-1">
-    <div class="flex">
-    <div class="item">
-        <img src="../static/goal.png" alt="Голы за игру">
-        <h3>Атака чемпіонатів</h3>
-        <p>На графіці показаний коефіцієнт атаки по чемпіонатах, він характеризує видовищність, чим вище число,
-             тим цікавіше</p>
-    </div>
-
-    <div class="item">
-        <img src="../static/club_goal_for.png" alt="Голы за игру среди клубов(атака)">
-        <h3>Атака клубів</h3>
-        <p>Порівняння атаки клубів, тобто скільки в середньому голів клуб забиває за гру</p>
-    </div>
-      <div class="item">
-        <img src="../static/club_against_for.png" alt="Голы за игру среди клубов(защита)">
-        <h3>Захист клубів</h3>
-        <p>Порівняння захисту клубів, тобто скільки в середньому голів клуб пропускає за гру</p>
-    </div>
-</div>
-  </div>
-  <div id="content-2">
-    Содержимое 2...
-  </div>
-  <div id="content-3">
-    Содержимое 3...
-  </div>
-      <div id="content-4">
-    Содержимое 3...
-  </div>
-      <div id="content-5">
-    Содержимое 3...
-  </div>
-      <div id="content-6">
-    Содержимое 3...
-  </div>
-      <div id="content-7">
-    Содержимое 3...
-  </div>
-      <div id="content-8">
-    Содержимое 3...
-  </div>
-</div>
+    <input type="radio" name="tab-btn" id="tab-btn-1" value="" checked>
+    <label for="tab-btn-1">Атака</label>
+    <input type="radio" name="tab-btn" id="tab-btn-2" value="">
+    <label for="tab-btn-2">Точність ударів</label>
+    <input type="radio" name="tab-btn" id="tab-btn-3" value="">
+    <label for="tab-btn-3">Паси</label>
+    <input type="radio" name="tab-btn" id="tab-btn-4" value="">
+    <label for="tab-btn-4">Дистанція пасу</label>
+    <input type="radio" name="tab-btn" id="tab-btn-5" value="">
+    <label for="tab-btn-5">Фоли</label>
+    <input type="radio" name="tab-btn" id="tab-btn-6" value="">
+    <label for="tab-btn-6">Атакуючі дії</label>
 
 
+    <div id="content-1">
+        <div class="flex">
+            <div class="item">
+                <img src="../static/goal.png" alt="Голы за игру">
+                <h3>Атака чемпіонатів</h3>
+                <p>На графіці показаний коефіцієнт атаки по чемпіонатах, він характеризує видовищність, чим вище число,
+                    тим цікавіше</p>
+            </div>
+
+            <div class="item">
+                <img src="../static/club_goal_for.png" alt="Голы за игру среди клубов(атака)">
+                <h3>Атака клубів</h3>
+                <p>Порівняння атаки клубів, тобто скільки в середньому голів клуб забиває за гру</p>
+            </div>
+            <div class="item">
+                <img src="../static/club_against_for.png" alt="Голы за игру среди клубов(защита)">
+                <h3>Захист клубів</h3>
+                <p>Порівняння захисту клубів, тобто скільки в середньому голів клуб пропускає за гру</p>
+            </div>
+        </div>
+    </div>
+    <div id="content-2">
+        <div class="flex">
+            <div class="item">
+                <img src="../static/shot.png" alt="точность ударов по странам">
+                <h3>Точність ударів</h3>
+                <p>На графіку показаний середній відсоток точних ударів (з усіх ударів попадання в стор воріт)</p>
+            </div>
+
+            <div class="item">
+                <img src="../static/shots_on_target_club.png" alt="точность ударов по клубам">
+                <h3>Точність ударів клубів</h3>
+                <p>На графіку показаний середній відсоток точних ударів (з усіх ударів попадання в стор воріт)</p>
+            </div>
+            <div class="item">
+                <img src="../static/average_shot_distance_club.png" alt="расстояние ударов">
+                <h3>Відстань ударів</h3>
+                <p>Середня відстань від точки удару по м'ячу до воріт, м</p>
+            </div>
+        </div>
+    </div>
+    <div id="content-3">
+        <div class="flex">
+            <div class="item">
+                <img src="../static/passes.png" alt="точность пасов по странам">
+                <h3>Точність пасів</h3>
+                <p>На графіку показаний середній відсоток точних пасів (які дійшли до адресата)</p>
+            </div>
+            <div class="item">
+                <img src="../static/passes_pct.png" alt="точность пасов по клубам">
+                <h3>Точність пасів клубів</h3>
+                <p>На графіку показаний середній відсоток точних пасів (які дійшли до адресата)</p>
+            </div>
+        </div>
+    </div>
+    <div id="content-4">
+        <div class="flex">
+            <div class="item">
+                <img src="../static/passes_pct_short_pct.png" alt="точность коротких пасов по клубам">
+                <h3>Точність коротких пасів</h3>
+                <p>На графіку показаний середній відсоток точних коротких пасів (від 5 до 15 метрів, які дійшли до
+                    адресата)</p>
+            </div>
+            <div class="item">
+                <img src="../static/passes_pct_medium.png" alt="точность средних пасов по клубам">
+                <h3>Точність середніх пасів</h3>
+                <p>На графіку показаний середній відсоток точних середніх пасів (від 15 до 30 метрів, які дійшли до
+                    адресата)</p>
+            </div>
+            <div class="item">
+                <img src="../static/passes_pct_long.png" alt="точность длинных пасов по клубам">
+                <h3>Точність довгих пасів</h3>
+                <p>На графіку показаний середній відсоток точних довгих пасів (від 30 метрів, які дійшли до
+                    адресата)</p>
+            </div>
+        </div>
+    </div>
+    <div id="content-5">
+        <div class="flex">
+            <div class="item">
+                <img src="../static/fouls.png" alt="средние фолы за игру">
+                <h3>Середні фоли за гру</h3>
+                <p>На графіку показаний середній відсоток фолів за гру </p>
+            </div>
+            <div class="item">
+                <img src="../static/yellow_card.png" alt="средние желтые за игру">
+                <h3>Середні жовті картки за гру</h3>
+                <p>На графіку показаний середній відсоток жовтих карток за гру</p>
+            </div>
+        </div>
+    </div>
+    <div id="content-6">
+        <div class="flex">
+            <div class="item">
+                <img src="../static/shot_per_goal.png" alt="ударов на гол">
+                <h3>Ударів на гол</h3>
+                <p>На графіку показаний середній показник ударів які призводять до голу </p>
+            </div>
+            <div class="item">
+                <img src="../static/goals_per_shot_on_target.png" alt="голы на удары в створ">
+                <h3>Ударів в площину на гол</h3>
+                <p>На графіку показаний середній показник ударів у площину воріт, які призводять до голу</p>
+            </div>
+            <div class="item">
+                <img src="../static/sca_per90.png" alt="атакующие действия">
+                <h3>Атакуючі дії</h3>
+                <p>Дві атакуючі дії, які безпосередньо ведуть до удару, наприклад передачі або перехоплення</p>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 
 {% endblock %}
